@@ -43,13 +43,11 @@ def getTotal(classes):
         total += classes[i].totalCreditHours()
     return total
 
-def year1sem1():
-    classes = [gpa(4, 'A-'), gpa(4, 'A'),gpa(3, 'B'), gpa(3, 'B+'), gpa(3, 'A')]
-    earned = getEarned(classes)
-    total = getTotal(classes)
-    return earned/total
+yr1sem1 = [gpa(3, 'A'), gpa(3, 'A'),gpa(3, 'A'), gpa(3, 'A'), gpa(3, 'A')]
+
+def cumulativeGPA():
+    classes = yr1sem1
+    return getEarned(classes) / getTotal(classes)
 
 
-
-
-print(year1sem1())
+print(cumulativeGPA())
