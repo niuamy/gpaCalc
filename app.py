@@ -5,7 +5,7 @@ class gpa:
         self.grade = grade
 
     def earnedCreditHours(self):
-        gradeConversion = 0;
+        gradeConversion = 0
 
         if self.grade == 'A':
             gradeConversion = 4.0
@@ -24,12 +24,32 @@ class gpa:
         elif self.grade == 'C-':
             gradeConversion = 1.7
         else:
-            gradeConversion = 0;
+            gradeConversion = 0
 
         return gradeConversion * self.creditHours
 
     def totalCreditHours(self):
         return self.creditHours
 
-class1 = gpa(4,'A')
-print(class1.earnedCreditHours()/class1.totalCreditHours())
+def getEarned(classes):
+    earned = 0
+    for i in range(len(classes)):
+        earned += classes[i].earnedCreditHours()
+    return earned
+
+def getTotal(classes):
+    total = 0
+    for i in range(len(classes)):
+        total += classes[i].totalCreditHours()
+    return total
+
+def year1sem1():
+    classes = [gpa(4, 'A-'), gpa(4, 'A'),gpa(3, 'B'), gpa(3, 'B+'), gpa(3, 'A')]
+    earned = getEarned(classes)
+    total = getTotal(classes)
+    return earned/total
+
+
+
+
+print(year1sem1())
