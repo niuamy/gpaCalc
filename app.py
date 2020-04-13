@@ -76,12 +76,21 @@ tabControl.add(tab1, text="TestGPA")
 #displays cumulative GPA
 tabControl.add(tab2, text="Cumulative")
 
-#"." - styles the background of the tabs
-#TNotebook - color behind the Notebook
-#TNotebook.tab - color of non-selected tab-button
+#Styles tabs
 style = ttk.Style()
-style.configure(".", background=blue)
-
+style.theme_create("soft", parent="alt", settings={
+    ".":{ #"." - styles the background of the tabs
+        "configure": {"background": blue}
+    },
+    "TNotebook":{ #TNotebook - color behind the Notebook
+        "configure": {"background": pink}
+    },
+    "TNotebook.Tab":{ #TNotebook.tab - color of non-selected tab-button
+        "configure": {"padding":[7,2], "background": blue},
+        "map":       {"background": [("selected", blue)],}
+    }
+})
+style.theme_use("soft")
 #tab1 - TestGPA
 tabControl.pack()
 select1 = IntVar()
@@ -141,8 +150,8 @@ def selected():
 btn2 = Button(tab2, text="Current Cumulative GPA", command=selected, bg=pink)
 
 #displays on GUI for tab2
-lbl2.pack(padx=30,pady=10)
-btn2.pack(padx=60,pady=20)
+lbl2.pack(padx=30,pady=30)
+btn2.pack(padx=60,pady=0)
 
 #Sets window to appear in center of screen
 w = window.winfo_reqwidth()
