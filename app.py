@@ -1,3 +1,4 @@
+from tkinter import *
 
 class gpa:
     def __init__(self, creditHours, grade):
@@ -43,11 +44,16 @@ def getTotal(classes):
         total += classes[i].totalCreditHours()
     return total
 
-yr1sem1 = [gpa(3, 'A'), gpa(3, 'A'),gpa(3, 'A'), gpa(3, 'A'), gpa(3, 'A')]
+yr0 = [gpa(4,'A'),gpa(3,'A'),gpa(3,'A')]
+yr1sem1 = [gpa(4, 'A-'), gpa(4, 'B+'),gpa(3, 'A'), gpa(2, 'A'), gpa(1, 'A')]
+yr1sem2 = [gpa(4, 'A'), gpa(3,'A'), gpa(3,'A'),gpa(2,'A')]
 
 def cumulativeGPA():
-    classes = yr1sem1
+    classes = yr0 + yr1sem1 + yr1sem2
     return getEarned(classes) / getTotal(classes)
 
-
-print(cumulativeGPA())
+m = Tk()
+m.title('GPA Calculator')
+w = Label(m, text=str(round(cumulativeGPA(),2)))
+w.pack()
+m.mainloop()
