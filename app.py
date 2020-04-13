@@ -44,16 +44,28 @@ def getTotal(classes):
         total += classes[i].totalCreditHours()
     return total
 
-yr0 = [gpa(4,'A'),gpa(3,'A'),gpa(3,'A')]
-yr1sem1 = [gpa(4, 'A-'), gpa(4, 'B+'),gpa(3, 'A'), gpa(2, 'A'), gpa(1, 'A')]
-yr1sem2 = [gpa(4, 'A'), gpa(3,'A'), gpa(3,'A'),gpa(2,'A')]
+
+yr1sem1 = [gpa(3, 'A'), gpa(3, 'A'),gpa(3, 'A'), gpa(3, 'A'), gpa(3, 'A')]
+
 
 def cumulativeGPA():
-    classes = yr0 + yr1sem1 + yr1sem2
+    classes = yr1sem1
     return getEarned(classes) / getTotal(classes)
 
-m = Tk()
-m.title('GPA Calculator')
-w = Label(m, text=str(round(cumulativeGPA(),2)))
-w.pack()
-m.mainloop()
+window = Tk()
+window.title('GPA Calculator')
+lbl = Label(window, text='hello!', font=('Arial Bold', 20))
+def clicked():
+    res = str(round(cumulativeGPA(),2))
+    lbl.configure(text= res)
+btn = Button(window, text="Click to Calculate GPA", command=clicked)
+lbl.pack(padx=20,pady=10)
+btn.pack(padx=30,pady=20)
+w = window.winfo_reqwidth()
+h = window.winfo_reqheight()
+ws = window.winfo_screenwidth()
+hs = window.winfo_screenheight()
+x = (ws/2) - (w/2)
+y = (hs/2) - (h/2)
+window.geometry('+%d+%d' % (x,y))
+window.mainloop()
