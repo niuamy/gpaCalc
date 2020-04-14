@@ -154,6 +154,8 @@ score4 = StringVar()
 weight4 = StringVar()
 score5 = StringVar()
 weight5 = StringVar()
+
+#labels
 lbl2 = Label(tab2, text='Score', font=('Arial Bold', 10), bg=blue)
 lbl3 = Label(tab2, text='  Weight', font=('Arial Bold', 10), bg=blue)
 lbl4 = Label(tab2, text='Score', font=('Arial Bold', 10), bg=blue)
@@ -166,9 +168,29 @@ lbl10 = Label(tab2, text='Score', font=('Arial Bold', 10), bg=blue)
 lbl11 = Label(tab2, text='  Weight', font=('Arial Bold', 10), bg=blue)
 lbl12 = Label(tab2, text='Total:', font=('Arial Bold', 10), bg=blue)
 lbl13 = Label(tab2, text='', font=('Arial Bold', 10), bg=blue)
+
+#calculates total score in one course
 def selected():
     #lbl2.configure(text=str(round(getEarned(classes) / getTotal(classes),2)))
-    print(score1.get())
+    group1 = 0
+    group2 = 0
+    group3 = 0
+    group4 = 0
+    group5 = 0
+    if len(score1.get()) != 0 and len(weight1.get()) != 0:
+        group1 = float(score1.get())*float(weight1.get())/100
+    if len(score2.get()) != 0 and len(weight2.get()) != 0:
+        group2 = float(score2.get())*float(weight2.get())/100
+    if len(score3.get()) != 0 and len(weight3.get()) != 0:
+        group3 = float(score3.get())*float(weight3.get())/100
+    if len(score4.get()) != 0 and len(weight4.get()) != 0:
+        group4 = float(score4.get())*float(weight4.get())/100
+    if len(score5.get()) != 0 and len(weight5.get()) != 0:
+        group5 = float(score5.get())*float(weight5.get())/100
+    total = str(round((group1 + group2 + group3 + group4 + group5),2))
+    lbl13.configure(text=total)
+
+#all entries to enter scores and weights
 entry1 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=score1)
 entry2 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=weight1)
 entry3 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=score2)
@@ -179,6 +201,8 @@ entry7 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=score4)
 entry8 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=weight4)
 entry9 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=score5)
 entry10 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=weight5)
+
+#calculates total
 btn2 = Button(tab2, text="Calculate", command=selected, bg=pink)
 
 #displays on GUI for tab2
