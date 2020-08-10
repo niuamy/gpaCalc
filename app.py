@@ -48,6 +48,11 @@ def getTotal(classes):
         total += classes[i].totalCreditHours()
     return total
 
+def main():
+    #Gets the file with the student's grades
+    fileName = input("Enter file name: ")
+
+
 #hardcoded classes
 yr1sem1 = [gpa(3, 'A-'), gpa(3, 'B'),gpa(3, 'C'), gpa(3, 'A'), gpa(3, 'A')]
 thisSem = [gpa(3, 'A-'), gpa(3, 'B'),gpa(3, 'C'), gpa(3, 'A'), gpa(3, 'A')]
@@ -64,12 +69,15 @@ window.title('GPA Calculator')
 
 #creates tabs
 tabControl = ttk.Notebook(window)
+tab0 = ttk.Frame(tabControl)
 tab1 = ttk.Frame(tabControl)
 tab2 = ttk.Frame(tabControl)
 
 #creates labels
 lbl = Label(tab1, text='hello!', font=('Arial Bold', 20), bg=blue)
 
+#Open file/Add new file
+tabControl.add(tab0, text="file")
 #displays how GPA will be affected by this semester's classes
 tabControl.add(tab1, text="TestGPA")
 #displays cumulative GPA
@@ -90,6 +98,28 @@ style.theme_create("soft", parent="alt", settings={
     }
 })
 style.theme_use("soft")
+
+#tab0
+tabControl.pack()
+def newFile():
+    fileName = input("Enter file name: ")
+    out = open(fileName, "w")
+    grade = input("Enter your grade (enter twice to finish): ")
+    while(len(grade) > 0):
+        out.write(grade)
+        out.write("\n")
+        grade = input("Enter your grade (enter twice to finish): ")
+    out.close()
+def oldFile():
+    print("hello")
+newFileBtn = Button(tab0, text="New File", width=10, command=newFile, bg=pink)
+existingFileBtn = Button(tab0, text="Existing File", width=10, command=oldFile, bg=pink)
+
+newFileBtn.place(x=82, y=70)
+existingFileBtn.place(x=82, y=120)
+
+
+
 #tab1 - TestGPA
 tabControl.pack()
 select1 = IntVar()
