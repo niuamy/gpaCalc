@@ -48,11 +48,6 @@ def getTotal(classes):
         total += classes[i].totalCreditHours()
     return total
 
-def main():
-    #Gets the file with the student's grades
-    fileName = input("Enter file name: ")
-
-
 #hardcoded classes
 yr1sem1 = [gpa(3, 'A-'), gpa(3, 'B'),gpa(3, 'C'), gpa(3, 'A'), gpa(3, 'A')]
 thisSem = [gpa(3, 'A-'), gpa(3, 'B'),gpa(3, 'C'), gpa(3, 'A'), gpa(3, 'A')]
@@ -110,8 +105,12 @@ def newFile():
         out.write("\n")
         grade = input("Enter your grade (enter twice to finish): ")
     out.close()
+
 def oldFile():
-    print("hello")
+    fileName = input("Enter file name: ")
+    read = open(fileName, "r")
+
+
 newFileBtn = Button(tab0, text="New File", width=10, command=newFile, bg=pink)
 existingFileBtn = Button(tab0, text="Existing File", width=10, command=oldFile, bg=pink)
 

@@ -62,17 +62,24 @@ f5 = Frame(root)
 for frame in (f1, f2, f3, f4, f5):
     frame.grid(row=0, column=0, sticky='news')
 
+#Variables
+fileName = StringVar()
+
 #Start Page
 Button(f1, text='New File', width=10, command=lambda:raise_frame(f2)).pack()
 Button(f1, text='Existing File', width=10, command=lambda:raise_frame(f4)).pack()
 
-#Second page: get new file name
-fileName = StringVar()
+#New file: get new file name
 Label(f2, text='Please Enter File Name', font=('Arial Bold', 10)).pack()
 Entry(f2, bd = 2, width = 12, font='Arial 10', textvariable=fileName).pack()
 Button(f2, text="Submit", width=10, command=lambda:raise_frame(f3)).pack()
 
-#Third page: get new file content
+#Existing file: get file name
+Label(f4, text='Please Enter File Name', font=('Arial Bold', 10)).pack()
+Entry(f4, bd = 2, width = 12, font='Arial 10', textvariable=fileName).pack()
+Button(f4, text="Submit", width=10, command=lambda:raise_frame(f5)).pack()
+
+#New file: get new file content
 rowCount = 0
 col = 0
 rowItems = []
@@ -80,7 +87,7 @@ scores = []
 weights = []
 gpaList = []
 
-#Add Score and Weight Entry
+#Add score and weight entry
 def getEntry():
     global rowCount
     score = StringVar()
