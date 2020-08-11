@@ -1,10 +1,9 @@
 from tkinter import *
-from tkinter import ttk
 
 #individual class gpa
 class gpa:
     def __init__(self, creditHours, grade):
-        self.creditHours = creditHours
+        self.creditHours = float(creditHours)
         self.grade = grade
 
     def earnedCreditHours(self):
@@ -28,11 +27,11 @@ class gpa:
             gradeConversion = 1.7
         else:
             gradeConversion = 0
-
+        
         return gradeConversion * self.creditHours
-
+    
     def totalCreditHours(self):
-        return self.creditHours
+        return self.creditHours   
 
 #cumulative credit hours earned
 def getEarned(classes):
@@ -48,200 +47,176 @@ def getTotal(classes):
         total += classes[i].totalCreditHours()
     return total
 
-#hardcoded classes
-yr1sem1 = [gpa(3, 'A-'), gpa(3, 'B'),gpa(3, 'C'), gpa(3, 'A'), gpa(3, 'A')]
-thisSem = [gpa(3, 'A-'), gpa(3, 'B'),gpa(3, 'C'), gpa(3, 'A'), gpa(3, 'A')]
-#this is for when there are more semesters added
-classes = yr1sem1
+#GUI
+def raise_frame(frame):
+    frame.tkraise()
 
-#colors
-blue = '#cbe6fa'
-pink = '#ffd2cf'
+root = Tk()
 
-#GUI setup
-window = Tk()
-window.title('GPA Calculator')
+f1 = Frame(root)
+f2 = Frame(root)
+f3 = Frame(root)
+f4 = Frame(root)
+f5 = Frame(root)
+f6 = Frame(root)
 
-#creates tabs
-tabControl = ttk.Notebook(window)
-tab1 = ttk.Frame(tabControl)
-tab2 = ttk.Frame(tabControl)
+for frame in (f1, f2, f3, f4, f5, f6):
+    frame.grid(row=0, column=0, sticky='news')
 
-#creates labels
-lbl = Label(tab1, text='hello!', font=('Arial Bold', 20), bg=blue)
+#Variables
+fileName = StringVar()
 
-#displays how GPA will be affected by this semester's classes
-tabControl.add(tab1, text="TestGPA")
-#displays cumulative GPA
-tabControl.add(tab2, text="Cumulative")
+#Start Page
+Button(f1, text='New File', width=10, command=lambda:raise_frame(f2)).pack()
+Button(f1, text='Existing File', width=10, command=lambda:raise_frame(f4)).pack()
 
-#Styles tabs
-style = ttk.Style()
-style.theme_create("soft", parent="alt", settings={
-    ".":{ #"." - styles the background of the tabs
-        "configure": {"background": blue}
-    },
-    "TNotebook":{ #TNotebook - color behind the Notebook
-        "configure": {"background": pink}
-    },
-    "TNotebook.Tab":{ #TNotebook.tab - color of non-selected tab-button
-        "configure": {"padding":[7,2], "background": blue},
-        "map":       {"background": [("selected", blue)],}
-    }
-})
-style.theme_use("soft")
-#tab1 - TestGPA
-tabControl.pack()
-select1 = IntVar()
-select2 = IntVar()
-select3 = IntVar()
-select4 = IntVar()
-select5 = IntVar()
-def clicked():
-    #calculates current earned and total credit hours
-    earn = getEarned(classes)
-    total = getTotal(classes)
+#New file: get new file name
+Label(f2, text='Please Enter File Name', font=('Arial Bold', 10)).pack()
+Entry(f2, bd = 2, width = 12, font='Arial 10', textvariable=fileName).pack()
+Button(f2, text="Submit", width=10, command=lambda:[createNewFilePage(),raise_frame(f3)]).pack()
 
-    #calculates current course(s) current and total credit hours
-    if select1.get() == 1:
-        earn+=yr1sem1[0].earnedCreditHours()
-        total+=yr1sem1[0].totalCreditHours()
-    if select2.get() == 1:
-        earn+=yr1sem1[1].earnedCreditHours()
-        total+=yr1sem1[1].totalCreditHours()
-    if select3.get() == 1:
-        earn+=yr1sem1[2].earnedCreditHours()
-        total+=yr1sem1[2].totalCreditHours()
-    if select4.get() == 1:
-        earn+=yr1sem1[3].earnedCreditHours()
-        total+=yr1sem1[3].totalCreditHours()
-    if select5.get() == 1:
-        earn+=yr1sem1[4].earnedCreditHours()
-        total+=yr1sem1[4].totalCreditHours()
+#Existing file: get file name
+Label(f4, text='Please Enter File Name', font=('Arial Bold', 10)).pack()
+Entry(f4, bd = 2, width = 12, font='Arial 10', textvariable=fileName).pack()
+Button(f4, text="Submit", width=10, command=lambda:[readFile(), createGPACalcPage(), getCumulativeGPA(), raise_frame(f5)]).pack()
 
-    #sets the label
-    if total != 0:
-        res = str(round(earn / total,2))
-    else:
-        res = 0.0
-    lbl.configure(text= res)
+def clear():
+    row.count = 0
+    row.items.clear()
+    grade.scores.clear()
+    grade.weights.clear()
 
-#check boxes to select which classes to compare
-check1 = Checkbutton(tab1, text='Class1', var=select1, onvalue=float("1"), offvalue=float("0"), bg=blue)
-check2 = Checkbutton(tab1, text='Class2', var=select2, onvalue=float("1"), offvalue=float("0"), bg=blue)
-check3 = Checkbutton(tab1, text='Class3', var=select3, onvalue=float("1"), offvalue=float("0"), bg=blue)
-check4 = Checkbutton(tab1, text='Class4', var=select4, onvalue=float("1"), offvalue=float("0"), bg=blue)
-check5 = Checkbutton(tab1, text='Class5', var=select5, onvalue=float("1"), offvalue=float("0"), bg=blue)
-btn = Button(tab1, text="Click to Calculate GPA", command=clicked, bg=pink)
+#New file: get new file content
+class row:
+    count = 0
+    items = []
 
-#displays on GUI for tab1
-lbl.pack(padx=30,pady=10)
-check1.pack()
-check2.pack()
-check3.pack()
-check4.pack()
-check5.pack()
-btn.pack(padx=60,pady=20)
+class grade:
+    scores = []
+    weights = []
+    gpaList = []
+    cumulative = 0
+    testGPA = 0
 
-#tab2 - Cumulative gpa
-score1 = StringVar()
-weight1 = StringVar()
-score2 = StringVar()
-weight2 = StringVar()
-score3 = StringVar()
-weight3 = StringVar()
-score4 = StringVar()
-weight4 = StringVar()
-score5 = StringVar()
-weight5 = StringVar()
+#Add score and weight entry
+def getEntry(page):
+    score = StringVar()
+    weight = IntVar()
+    scoreLabel = Label(page, text='Grade', font=('Arial Bold', 10))
+    weightLabel = Label(page, text='  Weight', font=('Arial Bold', 10))
+    scoreEntry = Entry(page, bd = 2, width = 6, font='Arial 10', textvariable=score)
+    weightEntry = Entry(page, bd = 2, width = 6, font='Arial 10', textvariable=weight)
+    scoreLabel.grid(row=row.count,column=0, padx=7)
+    scoreEntry.grid(row=row.count,column=1)
+    weightLabel.grid(row=row.count,column=2, padx=4, pady=10)
+    weightEntry.grid(row=row.count,column=3)
+    rows = [scoreLabel, weightLabel, scoreEntry, weightEntry]
+    row.items.append(rows)
+    grade.scores.append(scoreEntry)
+    grade.weights.append(weightEntry)
+    row.count += 1
 
-#labels
-lbl2 = Label(tab2, text='Score', font=('Arial Bold', 10), bg=blue)
-lbl3 = Label(tab2, text='  Weight', font=('Arial Bold', 10), bg=blue)
-lbl4 = Label(tab2, text='Score', font=('Arial Bold', 10), bg=blue)
-lbl5 = Label(tab2, text='  Weight', font=('Arial Bold', 10), bg=blue)
-lbl6 = Label(tab2, text='Score', font=('Arial Bold', 10), bg=blue)
-lbl7 = Label(tab2, text='  Weight', font=('Arial Bold', 10), bg=blue)
-lbl8 = Label(tab2, text='Score', font=('Arial Bold', 10), bg=blue)
-lbl9 = Label(tab2, text='  Weight', font=('Arial Bold', 10), bg=blue)
-lbl10 = Label(tab2, text='Score', font=('Arial Bold', 10), bg=blue)
-lbl11 = Label(tab2, text='  Weight', font=('Arial Bold', 10), bg=blue)
-lbl12 = Label(tab2, text='Total:', font=('Arial Bold', 10), bg=blue)
-lbl13 = Label(tab2, text='', font=('Arial Bold', 10), bg=blue)
+#Removes the last score and weight entry
+def removeEntry():
+    lastItem = len(row.items) - 1
+    for i in row.items[lastItem]:
+        i.destroy()
+    row.items.pop(lastItem)
+    grade.scores.pop(lastItem)
+    grade.weights.pop(lastItem)
+    row.count -= 1
 
-#calculates total score in one course
-def selected():
-    #lbl2.configure(text=str(round(getEarned(classes) / getTotal(classes),2)))
-    group1 = 0
-    group2 = 0
-    group3 = 0
-    group4 = 0
-    group5 = 0
-    if len(score1.get()) != 0 and len(weight1.get()) != 0:
-        group1 = float(score1.get())*float(weight1.get())/100
-    if len(score2.get()) != 0 and len(weight2.get()) != 0:
-        group2 = float(score2.get())*float(weight2.get())/100
-    if len(score3.get()) != 0 and len(weight3.get()) != 0:
-        group3 = float(score3.get())*float(weight3.get())/100
-    if len(score4.get()) != 0 and len(weight4.get()) != 0:
-        group4 = float(score4.get())*float(weight4.get())/100
-    if len(score5.get()) != 0 and len(weight5.get()) != 0:
-        group5 = float(score5.get())*float(weight5.get())/100
-    total = str(round((group1 + group2 + group3 + group4 + group5),2))
-    lbl13.configure(text=total)
+#Creates a new file with the scores and weights
+def createFile():
+    if (fileName.get() != ""):
+        out = open("files/" + fileName.get(), "a")
+        for i in range(len(grade.scores)):
+            out.write(grade.scores[i].get())
+            out.write(grade.weights[i].get())
+            out.write("\n")
+        out.close()
 
-#all entries to enter scores and weights
-entry1 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=score1)
-entry2 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=weight1)
-entry3 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=score2)
-entry4 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=weight2)
-entry5 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=score3)
-entry6 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=weight3)
-entry7 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=score4)
-entry8 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=weight4)
-entry9 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=score5)
-entry10 = Entry(tab2, bd = 2, width = 6, font='Arial 10', textvariable=weight5)
+#Reads a file that contains the scores and weights
+def readFile():
+    grade.gpaList.clear()
+    if (fileName.get() != ""):
+        text = open("files/" + fileName.get(), "r")
+        for line in text:
+            grades = line[:1]
+            weights = line[1:3]
+            grade.gpaList.append(gpa(weights,grades))
+        text.close() 
 
-#calculates total
-btn2 = Button(tab2, text="Calculate", command=selected, bg=pink)
+#Gets and displays cumulative GPA
+def getCumulativeGPA():
+    if (getTotal(grade.gpaList) != 0):
+        return str(round(getEarned(grade.gpaList)/getTotal(grade.gpaList),2))
 
-#displays on GUI for tab2
-lbl2.grid(row=0,column=0, padx=7)
-entry1.grid(row=0,column=1)
-lbl3.grid(row=0,column=2, padx=4, pady=10)
-entry2.grid(row=0,column=3)
+#Gets and displays test cumulative GPA
+def getTestGPA():
+    testGPA = grade.gpaList.copy()
+    for i in range(len(grade.scores)):
+        testGPA.append(gpa(grade.weights[i].get(),grade.scores[i].get()))
+    grade.testGPA = str(round(getEarned(testGPA)/getTotal(testGPA),2))
+    return grade.testGPA
+    
+#Sets up window for content retrieval page
+def createNewFilePage():
+    for i in range(4):
+        getEntry(f3)
+    addEntryButton = Button(f3, text='Add entry', command=addRegEntry)
+    removeEntryButton = Button(f3, text='Remove entry', command=removeEntry)
+    submit = Button(f3, text='Submit', command=lambda:[createFile(), readFile(), createGPACalcPage(), getCumulativeGPA(), raise_frame(f5)])
+    addEntryButton.grid(row=0, column=4, padx=7, pady=8)
+    removeEntryButton.grid(row=1, column=4, padx=7, pady=8)
+    submit.grid(row=2, column=4, padx=7, pady=8)
 
-lbl4.grid(row=1,column=0, padx=7)
-entry3.grid(row=1,column=1)
-lbl5.grid(row=1,column=2, padx=4, pady=10)
-entry4.grid(row=1,column=3)
+#Sets up window for GPA calculation page
+def createGPACalcPage():
+    gpaLbl = Label(f5, text='Your current cumulative GPA: ', font=('Arial Bold', 10))
+    cumulativeGPA = Label(f5, text=getCumulativeGPA(), font=('Arial Bold', 10))
+    testGPA = Button(f5, text="Test GPA", command=lambda:[clear(),createTestGPA(),raise_frame(f6)])
+    home = Button(f5, text='Home', command=lambda:raise_frame(f1))
+    gpaLbl.pack()
+    cumulativeGPA.pack()
+    testGPA.pack()
+    home.pack()
 
-lbl6.grid(row=2,column=0, padx=7)
-entry5.grid(row=2,column=1)
-lbl7.grid(row=2,column=2, padx=4, pady=10)
-entry6.grid(row=2,column=3)
+#Sets up window for Test GPA calculation page
+def createTestGPA():
+    for i in range(4):
+        getEntry(f6)
+    addEntryButton = Button(f6, text='Add entry', command=addTestEntry)
+    removeEntryButton = Button(f6, text='Remove entry', command=removeEntry)
+    submit = Button(f6, text='Submit', command=lambda:[updateTestGPA(testGPAContainer,getTestGPA())])
+    testGPAContainer = Label(f6, text=getTestGPA(), font=('Arial Bold', 10))
+    testGPALbl = Label(f6, text='GPA: ', font=('Arial Bold', 10))
+    addEntryButton.grid(row=0, column=4, padx=7, pady=8)
+    removeEntryButton.grid(row=1, column=4, padx=7, pady=8)
+    submit.grid(row=2, column=4, padx=7, pady=8)
+    testGPALbl.grid(row=3, column=4, padx=7, pady=8)
+    testGPAContainer.grid(row=4, column=4, padx=7, pady=8)
 
-lbl8.grid(row=3,column=0, padx=7)
-entry7.grid(row=3,column=1)
-lbl9.grid(row=3,column=2, padx=4, pady=10)
-entry8.grid(row=3,column=3)
+#Diplay updated test GPA
+def updateTestGPA(label,gpa):
+    label.config(text=gpa)
 
-lbl10.grid(row=4,column=0, padx=7)
-entry9.grid(row=4,column=1)
-lbl11.grid(row=4,column=2, padx=4, pady=10)
-entry10.grid(row=4,column=3)
+#Add Test Entry
+def addTestEntry():
+    getEntry(f6)
 
-lbl12.grid(row=5,column=0, pady=5)
-lbl13.grid(row=5,column=1,pady=5)
-btn2.grid(row=5,column=3,pady=8)
+#Add Regular Entry
+def addRegEntry():
+    getEntry(f3)
 
 #Sets window to appear in center of screen
-w = window.winfo_reqwidth()
-h = window.winfo_reqheight()
-ws = window.winfo_screenwidth()
-hs = window.winfo_screenheight()
+w = root.winfo_reqwidth()
+h = root.winfo_reqheight()
+ws = root.winfo_screenwidth()
+hs = root.winfo_screenheight()
 x = (ws/2) - (w/2)
 y = (hs/2) - (h/2)
-window.geometry('+%d+%d' % (x,y))
-#window['bg'] = '#cbe6fa'
-window.mainloop()
+root.geometry('+%d+%d' % (x,y))
+
+raise_frame(f1)
+root.mainloop()
