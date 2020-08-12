@@ -76,7 +76,7 @@ fileName = StringVar()
 #Start Page
 newFile = Button(f1, text='New File', width=18, command=lambda:raise_frame(f2), bg=colors.pink)
 oldFile = Button(f1, text='Existing File', width=18, command=lambda:raise_frame(f4), bg=colors.pink)
-courseGrade = Button(f1, text='Calculate Course Grade', width=18, command=lambda:[raise_frame(f7)], bg=colors.pink)
+courseGrade = Button(f1, text='Calculate Course Grade', width=18, command=lambda:[clear(),createCourseGradePage(),raise_frame(f7)], bg=colors.pink)
 newFile.config(font=('Arial', 11))
 oldFile.config(font=('Arial', 11))
 courseGrade.config(font=('Arial',11))
@@ -127,12 +127,12 @@ def getEntry(page):
     score = StringVar()
     weight = IntVar()
     scoreLabel = Label(page, text='Grade', font=('Arial Bold', 10), bg=colors.blue)
-    weightLabel = Label(page, text='  Weight', font=('Arial Bold', 10), bg=colors.blue)
+    weightLabel = Label(page, text='Weight', font=('Arial Bold', 10), bg=colors.blue)
     scoreEntry = Entry(page, bd = 2, width = 6, font='Arial 10', textvariable=score)
     weightEntry = Entry(page, bd = 2, width = 6, font='Arial 10', textvariable=weight)
     scoreLabel.grid(row=row.count,column=0, padx=7)
     scoreEntry.grid(row=row.count,column=1)
-    weightLabel.grid(row=row.count,column=2, padx=4, pady=10)
+    weightLabel.grid(row=row.count,column=2, padx=(8,4), pady=10)
     weightEntry.grid(row=row.count,column=3)
     rows = [scoreLabel, weightLabel, scoreEntry, weightEntry]
     row.items.append(rows)
@@ -200,11 +200,9 @@ gpaLbl = Label(f5, text='Current cumulative GPA:', font=('Arial', 13), bg=colors
 cumulativeGPA = Label(f5, text='', font=('Arial', 13), bg=colors.blue)
 testGPA = Button(f5, text="Test GPA", width=15, bg=colors.pink, command=lambda:[clear(),createTestGPAPage(),raise_frame(f6)])
 home = Button(f5, text='Home', width=15, bg=colors.pink, command=lambda:raise_frame(f1))
-#back = Button(f5, text='Back', width=15, bg=colors.pink, command=lambda:raise_frame(f4))
 gpaLbl.pack(pady=(15,10))
 cumulativeGPA.pack(pady=(0,10))
 testGPA.pack(pady=7)
-#back.pack(pady=7)
 home.pack(pady=7)
 
 #Sets up window for Test GPA calculation page
@@ -216,13 +214,15 @@ def createTestGPAPage():
     submit = Button(f6, text='Submit', command=lambda:[updateTestGPA(testGPAContainer,getTestGPA())], width=10, bg=colors.pink)
     testGPAContainer = Label(f6, text=getTestGPA(), font=('Arial Bold', 10), bg=colors.blue)
     testGPALbl = Label(f6, text='GPA: ', font=('Arial Bold', 10), bg=colors.blue)
-    home = Button(f6, text='Home', width=10, bg=colors.pink, command=lambda:raise_frame(f1))
-    addEntryButton.grid(row=0, column=4, padx=(15,7), pady=8)
-    removeEntryButton.grid(row=1, column=4, padx=(15,7), pady=8)
-    submit.grid(row=2, column=4, padx=(16,6), pady=8)
-    testGPALbl.grid(row=3, column=4, padx=(17,6), pady=8)
-    testGPAContainer.grid(row=4, column=4, padx=(17,6), pady=8)
-    home.grid(row=5, column=4, padx=(17,6), pady=8)
+    home = Button(f6, text='Home', width=10, bg=colors.pink, command=lambda:[clearFrame(f6),raise_frame(f1)])
+    back = Button(f6, text='Back', width=10, bg=colors.pink, command=lambda:[clearFrame(f6),raise_frame(f5)])
+    addEntryButton.grid(row=0, column=4, padx=(12,7), pady=8)
+    removeEntryButton.grid(row=1, column=4, padx=(12,7), pady=8)
+    submit.grid(row=2, column=4, padx=(13,6), pady=8)
+    testGPALbl.grid(row=3, column=4, padx=(13,6), pady=8)
+    testGPAContainer.grid(row=4, column=4, padx=(13,6), pady=8)
+    back.grid(row=5, column=4, padx=(13,6), pady=8)
+    home.grid(row=6, column=4, padx=(13,6), pady=8)
     
 #Diplay updated test GPA
 def updateTestGPA(label,gpa):
@@ -236,31 +236,34 @@ def addTestEntry():
 def addRegEntry():
     getEntry(f3)
 
-def clearFrame(frame):
-    for widget in frame.info_children():
-        widget.destroy()
+def getCourseGrade(gradeContainer):
+    grades = 0
+    for i in range(len(grade.scores)):
+       if(grade.scores[i].get() != ''):
+            grades+= float(grade.scores[i].get()) * float(grade.weights[i].get())
+    gradeContainer.config(text=str(grades))
 
 #Calculates course grade
-# def createCourseGradePage():
-#     for i in range(4):
-#         getEntry(f7)
-#     addEntryButton = Button(f7, text='Add entry', command=addTestEntry, width=10, bg=colors.pink)
-#     removeEntryButton = Button(f7, text='Remove entry', command=removeEntry, width=10, bg=colors.pink)
-#     submit = Button(f7, text='Submit', command=getCourseGrade(), width=10, bg=colors.pink)
-#     gradeContainer = Label(f7, text='', font=('Arial Bold', 10), bg=colors.blue)
-#     gradeLbl = Label(f7, text='Grade', font=('Arial Bold', 10), bg=colors.blue)
-#     addEntryButton.grid(row=0, column=4, padx=7, pady=8)
-#     removeEntryButton.grid(row=1, column=4, padx=7, pady=8)
-#     submit.grid(row=2, column=4, padx=7, pady=8)
-#     gradeLbl.grid(row=3, column=4, padx=7, pady=8)
-#     gradeContainer.grid(row=4, column=4, padx=7, pady=8)
+def createCourseGradePage():
+    for i in range(4):
+        getEntry(f7)
+    addEntryButton = Button(f7, text='Add entry', command=lambda:[getEntry(f7)], width=10, bg=colors.pink)
+    removeEntryButton = Button(f7, text='Remove entry', command=removeEntry, width=10, bg=colors.pink)
+    gradeContainer = Label(f7, text='', font=('Arial Bold', 10), bg=colors.blue)
+    submit = Button(f7, text='Submit', command=lambda:[getCourseGrade(gradeContainer)], width=10, bg=colors.pink)
+    gradeLbl = Label(f7, text='Grade:', font=('Arial Bold', 10), bg=colors.blue)
+    addEntryButton.grid(row=0, column=4, padx=7, pady=8)
+    removeEntryButton.grid(row=1, column=4, padx=7, pady=8)
+    back = Button(f7, text='Back', width=10, bg=colors.pink, command=lambda:[clearFrame(f7),raise_frame(f1)])
+    submit.grid(row=2, column=4, padx=7, pady=8)
+    gradeLbl.grid(row=3, column=4, padx=7, pady=8)
+    gradeContainer.grid(row=4, column=4, padx=7, pady=8)
+    back.grid(row=5, column=4, padx=7, pady=8)
 
-# def getCourseGrade():
-#     grade = 0
-#     for i in range(len(grade.scores)):
-#        grade+= int(grade.scores[i].get()) * grade.weights[i].get()
-#     print(grade)
-#     gradeContainer.config(text=str(grade))
+#Clears the frame
+def clearFrame(frame):
+    for i in frame.winfo_children():
+        i.destroy()
 
 #Sets window to appear in center of screen
 w = root.winfo_reqwidth()
