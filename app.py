@@ -74,30 +74,35 @@ for frame in (f1, f2, f3, f4, f5, f6, f7):
 fileName = StringVar()
 
 #Start Page
-newFile = Button(f1, text='New File', width=10, command=lambda:raise_frame(f2), bg=colors.pink)
-oldFile = Button(f1, text='Existing File', width=10, command=lambda:raise_frame(f4), bg=colors.pink)
-#courseGrade = Button(f1, text='Calculate Course Grade', command=lambda:[createCourseGradePage(),raise_frame(f7)], bg=colors.pink)
+newFile = Button(f1, text='New File', width=18, command=lambda:raise_frame(f2), bg=colors.pink)
+oldFile = Button(f1, text='Existing File', width=18, command=lambda:raise_frame(f4), bg=colors.pink)
+courseGrade = Button(f1, text='Calculate Course Grade', width=18, command=lambda:[raise_frame(f7)], bg=colors.pink)
 newFile.config(font=('Arial', 11))
 oldFile.config(font=('Arial', 11))
-newFile.place(relx=.25, rely=.22, height=30)
-oldFile.place(relx=.25, rely=.53)
-#courseGrade.place(relx=.25, rely=.75)
+courseGrade.config(font=('Arial',11))
+newFile.pack(padx=30, pady=(50,20))
+oldFile.pack()
+courseGrade.pack(pady=(20,0))
 
 #New file: get new file name
-newFileLbl = Label(f2, text='Please Enter File Name', bg=colors.blue, font=('Arial', 12))
-newFileEntry = Entry(f2, bd = 2, width = 17, font='Arial 10', textvariable=fileName)
-submitNew = Button(f2, text="Submit", width=16, bg=colors.pink, command=lambda:[createNewFilePage(),raise_frame(f3)])
-newFileLbl.place(relx=.08, rely=.15)
-newFileEntry.place(relx=.2, rely=.4)
-submitNew.place(relx=.2, rely=.65)
+newFileLbl = Label(f2, text='Please Enter File Name', bg=colors.blue, font=('Arial', 13))
+newFileEntry = Entry(f2, bd = 2, width = 20, font='Arial 11', textvariable=fileName)
+submitNew = Button(f2, text="Submit", width=22, bg=colors.pink, command=lambda:[clear(),createNewFilePage(),raise_frame(f3)])
+backNew = Button(f2, text='Back', width=22, bg=colors.pink, command=lambda:raise_frame(f1))
+newFileLbl.pack(pady=(40,25), padx=90)
+newFileEntry.pack(pady=(0,25))
+submitNew.pack(pady=(0,10))
+backNew.pack(pady=(0,80))
 
 #Existing file: get file name
-oldFileLbl = Label(f4, text='Please Enter File Name', bg=colors.blue, font=('Arial', 12))
-oldFileEntry = Entry(f4, bd = 2, width = 17, font='Arial 10', textvariable=fileName)
-submitOld = Button(f4, text="Submit", width=16, bg=colors.pink, command=lambda:[readFile(), createGPACalcPage(), getCumulativeGPA(), raise_frame(f5)])
-oldFileLbl.place(relx=.08, rely=.15)
-oldFileEntry.place(relx=.2, rely=.4)
-submitOld.place(relx=.2, rely=.65)
+oldFileLbl = Label(f4, text='Please Enter File Name', bg=colors.blue, font=('Arial', 13))
+oldFileEntry = Entry(f4, bd = 2, width = 20, font='Arial 11', textvariable=fileName)
+submitOld = Button(f4, text="Submit", width=22, bg=colors.pink, command=lambda:[readFile(), getCumulativeGPA(), raise_frame(f5)])
+backOld = Button(f4, text='Back', width=22, bg=colors.pink, command=lambda:raise_frame(f1))
+oldFileLbl.pack(pady=(40,25), padx=90)
+oldFileEntry.pack(pady=(0,25))
+submitOld.pack(pady=(0,10))
+backOld.pack(pady=(0,80))
 
 def clear():
     row.count = 0
@@ -169,7 +174,7 @@ def readFile():
 #Gets and displays cumulative GPA
 def getCumulativeGPA():
     if (getTotal(grade.gpaList) != 0):
-        return str(round(getEarned(grade.gpaList)/getTotal(grade.gpaList),2))
+        cumulativeGPA.config(text=str(round(getEarned(grade.gpaList)/getTotal(grade.gpaList),2)))
 
 #Gets and displays test cumulative GPA
 def getTestGPA():
@@ -185,21 +190,22 @@ def createNewFilePage():
         getEntry(f3)
     addEntryButton = Button(f3, text='Add entry', command=addRegEntry, width=10, bg=colors.pink)
     removeEntryButton = Button(f3, text='Remove entry', command=removeEntry, width=10, bg=colors.pink)
-    submit = Button(f3, text='Submit', width=10, bg=colors.pink, command=lambda:[createFile(), readFile(), createGPACalcPage(), getCumulativeGPA(), raise_frame(f5)])
+    submit = Button(f3, text='Submit', width=10, bg=colors.pink, command=lambda:[createFile(), readFile(), getCumulativeGPA(), raise_frame(f5)])
     addEntryButton.grid(row=0, column=4, padx=7, pady=8)
     removeEntryButton.grid(row=1, column=4, padx=7, pady=8)
     submit.grid(row=2, column=4, padx=7, pady=8)
 
 #Sets up window for GPA calculation page
-def createGPACalcPage():
-    gpaLbl = Label(f5, text='Current cumulative GPA:', font=('Arial', 11), bg=colors.blue)
-    cumulativeGPA = Label(f5, text=getCumulativeGPA(), font=('Arial', 11), bg=colors.blue)
-    testGPA = Button(f5, text="Test GPA", width=8, bg=colors.pink, command=lambda:[clear(),createTestGPAPage(),raise_frame(f6)])
-    #home = Button(f5, text='Home', width=8, bg=colors.pink, command=lambda:raise_frame(f1))
-    gpaLbl.pack(pady=7)
-    cumulativeGPA.pack(pady=0)
-    testGPA.pack(pady=7)
-    #home.pack()
+gpaLbl = Label(f5, text='Current cumulative GPA:', font=('Arial', 13), bg=colors.blue)
+cumulativeGPA = Label(f5, text='', font=('Arial', 13), bg=colors.blue)
+testGPA = Button(f5, text="Test GPA", width=15, bg=colors.pink, command=lambda:[clear(),createTestGPAPage(),raise_frame(f6)])
+home = Button(f5, text='Home', width=15, bg=colors.pink, command=lambda:raise_frame(f1))
+#back = Button(f5, text='Back', width=15, bg=colors.pink, command=lambda:raise_frame(f4))
+gpaLbl.pack(pady=(15,10))
+cumulativeGPA.pack(pady=(0,10))
+testGPA.pack(pady=7)
+#back.pack(pady=7)
+home.pack(pady=7)
 
 #Sets up window for Test GPA calculation page
 def createTestGPAPage():
@@ -210,13 +216,13 @@ def createTestGPAPage():
     submit = Button(f6, text='Submit', command=lambda:[updateTestGPA(testGPAContainer,getTestGPA())], width=10, bg=colors.pink)
     testGPAContainer = Label(f6, text=getTestGPA(), font=('Arial Bold', 10), bg=colors.blue)
     testGPALbl = Label(f6, text='GPA: ', font=('Arial Bold', 10), bg=colors.blue)
-    #home = Button(f6, text='Home', width=8, bg=colors.pink, command=lambda:raise_frame(f1))
-    addEntryButton.grid(row=0, column=4, padx=7, pady=8)
-    removeEntryButton.grid(row=1, column=4, padx=7, pady=8)
-    submit.grid(row=2, column=4, padx=7, pady=8)
-    testGPALbl.grid(row=3, column=4, padx=7, pady=8)
-    testGPAContainer.grid(row=4, column=4, padx=7, pady=8)
-    #home.grid(row=5, column=4, padx=7, pady=8)
+    home = Button(f6, text='Home', width=10, bg=colors.pink, command=lambda:raise_frame(f1))
+    addEntryButton.grid(row=0, column=4, padx=(15,7), pady=8)
+    removeEntryButton.grid(row=1, column=4, padx=(15,7), pady=8)
+    submit.grid(row=2, column=4, padx=(16,6), pady=8)
+    testGPALbl.grid(row=3, column=4, padx=(17,6), pady=8)
+    testGPAContainer.grid(row=4, column=4, padx=(17,6), pady=8)
+    home.grid(row=5, column=4, padx=(17,6), pady=8)
     
 #Diplay updated test GPA
 def updateTestGPA(label,gpa):
@@ -229,6 +235,10 @@ def addTestEntry():
 #Add Regular Entry
 def addRegEntry():
     getEntry(f3)
+
+def clearFrame(frame):
+    for widget in frame.info_children():
+        widget.destroy()
 
 #Calculates course grade
 # def createCourseGradePage():
