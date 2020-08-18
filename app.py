@@ -166,8 +166,8 @@ def readFile():
     if (fileName.get() != ""):
         text = open("files/" + fileName.get(), "r")
         for line in text:
-            grades = line[:1]
-            weights = line[1:3]
+            grades = line[:len(line) - 2]
+            weights = line[len(line) - 2:]
             grade.gpaList.append(gpa(weights,grades))
         text.close() 
 
